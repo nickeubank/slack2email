@@ -1,0 +1,38 @@
+# Slack app manifest for slack2email.
+#
+# Create the app at https://api.slack.com/apps -> "From an app manifest",
+# paste this in, then install it to your workspace.
+#
+# Note the scopes are USER scopes, not bot scopes. A bot token only sees
+# channels the bot has been invited to; a user token sees everything you see.
+display_information:
+  name: slack2email
+  description: Forwards my Slack messages to my email
+  background_color: "#3d1152"
+
+oauth_config:
+  scopes:
+    user:
+      - channels:history      # public channels you're in
+      - channels:read
+      - groups:history        # private channels you're in
+      - groups:read
+      - im:history            # direct messages
+      - im:read
+      - mpim:history          # group direct messages
+      - mpim:read
+      - users:read            # resolve @mentions to names
+
+settings:
+  # Events on behalf of the *user*, so we see your conversations rather than a bot's.
+  event_subscriptions:
+    user_events:
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+  interactivity:
+    is_enabled: false
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false

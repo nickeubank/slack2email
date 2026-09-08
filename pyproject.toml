@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slack2email"
+version = "0.1.0"
+description = "Forward every Slack message you can see -- DMs, group DMs, and channels you're in -- to your email."
+requires-python = ">=3.11"
+dependencies = ["slack_sdk>=3.27"]
+
+[project.scripts]
+slack2email = "slack2email.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["slack2email*"]
