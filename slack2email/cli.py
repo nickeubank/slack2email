@@ -246,7 +246,8 @@ def cmd_install_agent(args) -> int:
     config_path = Path(args.config).expanduser() if args.config else CONFIG_PATH
     plist = {
         "Label": LABEL,
-        "ProgramArguments": [sys.executable, "-m", "slack2email", "run", "--config", str(config_path)],
+        # --config is a top-level flag: it must precede the subcommand.
+        "ProgramArguments": [sys.executable, "-m", "slack2email", "--config", str(config_path), "run"],
         "RunAtLoad": True,
         "KeepAlive": True,
         "ProcessType": "Background",
@@ -287,7 +288,7 @@ def cmd_uninstall_agent(args) -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="slack2email", description=__doc__)
     parser.add_argument("--version", action="version", version=f"slack2email {__version__}")
     parser.add_argument("--config", help=f"path to config.toml (default {CONFIG_PATH})")
@@ -317,7 +318,11 @@ def main(argv: list[str] | None = None) -> int:
         func=cmd_uninstall_agent
     )
 
-    args = parser.parse_args(argv)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
     try:
         return args.func(args)
     except ConfigError as exc:
